@@ -149,10 +149,24 @@ export {n as m};
 
 同样的，`function`和`class`的输出，也必须遵守这样的写法。
 
+NOTE: 测试 https://babeljs.io/repl/
+
 ```javascript
 // 报错
 function f() {}
 export f;
+
+// 正确
+function f() {}
+export default f;
+
+// 报错
+var f = function f() {}
+export f;
+
+// 正确
+const f = function func() {}
+export default f;
 
 // 正确
 export function f() {};
@@ -776,4 +790,3 @@ async function main() {
 }
 main();
 ```
-

@@ -1,17 +1,17 @@
 # 字符串的扩展
 
-ES6加强了对Unicode的支持，并且扩展了字符串对象。
+ES6 加强了对 Unicode 的支持，并且扩展了字符串对象。
 
-## 字符的Unicode表示法
+## 字符的 Unicode 表示法
 
-JavaScript允许采用`\uxxxx`形式表示一个字符，其中“xxxx”表示字符的码点。
+JavaScript 允许采用`\uxxxx`形式表示一个字符，其中`xxxx`表示字符的 Unicode 码点。
 
 ```javascript
 "\u0061"
 // "a"
 ```
 
-但是，这种表示法只限于`\u0000`——`\uFFFF`之间的字符。超出这个范围的字符，必须用两个双字节的形式表达。
+但是，这种表示法只限于码点在`\u0000`~`\uFFFF`之间的字符。超出这个范围的字符，必须用两个双字节的形式表示。
 
 ```javascript
 "\uD842\uDFB7"
@@ -39,9 +39,9 @@ hell\u{6F} // 123
 // true
 ```
 
-上面代码中，最后一个例子表明，大括号表示法与四字节的UTF-16编码是等价的。
+上面代码中，最后一个例子表明，大括号表示法与四字节的 UTF-16 编码是等价的。
 
-有了这种表示法之后，JavaScript共有6种方法可以表示一个字符。
+有了这种表示法之后，JavaScript 共有6种方法可以表示一个字符。
 
 ```javascript
 '\z' === 'z'  // true
@@ -65,7 +65,7 @@ s.charCodeAt(0) // 55362
 s.charCodeAt(1) // 57271
 ```
 
-上面代码中，汉字“𠮷”（注意，这个字不是”吉祥“的”吉“）的码点是`0x20BB7`，UTF-16编码为`0xD842 0xDFB7`（十进制为`55362 57271`），需要`4`个字节储存。对于这种`4`个字节的字符，JavaScript不能正确处理，字符串长度会误判为`2`，而且`charAt`方法无法读取整个字符，`charCodeAt`方法只能分别返回前两个字节和后两个字节的值。
+上面代码中，汉字“𠮷”（注意，这个字不是“吉祥”的“吉”）的码点是`0x20BB7`，UTF-16编码为`0xD842 0xDFB7`（十进制为`55362 57271`），需要`4`个字节储存。对于这种`4`个字节的字符，JavaScript不能正确处理，字符串长度会误判为`2`，而且`charAt`方法无法读取整个字符，`charCodeAt`方法只能分别返回前两个字节和后两个字节的值。
 
 ES6提供了`codePointAt`方法，能够正确处理4个字节储存的字符，返回一个字符的码点。
 
@@ -124,7 +124,7 @@ String.fromCharCode(0x20BB7)
 
 上面代码中，`String.fromCharCode`不能识别大于`0xFFFF`的码点，所以`0x20BB7`就发生了溢出，最高位`2`被舍弃了，最后返回码点`U+0BB7`对应的字符，而不是码点`U+20BB7`对应的字符。
 
-ES6提供了`String.fromCodePoint`方法，可以识别`0xFFFF`的字符，弥补了`String.fromCharCode`方法的不足。在作用上，正好与`codePointAt`方法相反。
+ES6提供了`String.fromCodePoint`方法，可以识别大于`0xFFFF`的字符，弥补了`String.fromCharCode`方法的不足。在作用上，正好与`codePointAt`方法相反。
 
 ```javascript
 String.fromCodePoint(0x20BB7)
@@ -171,7 +171,7 @@ for (let i of text) {
 
 ## at()
 
-ES5对字符串对象提供`charAt`方法，返回字符串给定位置的字符。该方法不能识别码点大于`0xFFFF`的字符。
+ES5 对字符串对象提供`charAt`方法，返回字符串给定位置的字符。该方法不能识别码点大于`0xFFFF`的字符。
 
 ```javascript
 'abc'.charAt(0) // "a"
@@ -180,7 +180,7 @@ ES5对字符串对象提供`charAt`方法，返回字符串给定位置的字符
 
 上面代码中，`charAt`方法返回的是UTF-16编码的第一个字节，实际上是无法显示的。
 
-目前，有一个提案，提出字符串实例的`at`方法，可以识别Unicode编号大于`0xFFFF`的字符，返回正确的字符。
+目前，有一个提案，提出字符串实例的`at`方法，可以识别 Unicode 编号大于`0xFFFF`的字符，返回正确的字符。
 
 ```javascript
 'abc'.at(0) // "a"
@@ -191,9 +191,9 @@ ES5对字符串对象提供`charAt`方法，返回字符串给定位置的字符
 
 ## normalize()
 
-许多欧洲语言有语调符号和重音符号。为了表示它们，Unicode提供了两种方法。一种是直接提供带重音符号的字符，比如`Ǒ`（\u01D1）。另一种是提供合成符号（combining character），即原字符与重音符号的合成，两个字符合成一个字符，比如`O`（\u004F）和`ˇ`（\u030C）合成`Ǒ`（\u004F\u030C）。
+许多欧洲语言有语调符号和重音符号。为了表示它们，Unicode 提供了两种方法。一种是直接提供带重音符号的字符，比如`Ǒ`（\u01D1）。另一种是提供合成符号（combining character），即原字符与重音符号的合成，两个字符合成一个字符，比如`O`（\u004F）和`ˇ`（\u030C）合成`Ǒ`（\u004F\u030C）。
 
-这两种表示方法，在视觉和语义上都等价，但是JavaScript不能识别。
+这两种表示方法，在视觉和语义上都等价，但是 JavaScript 不能识别。
 
 ```javascript
 '\u01D1'==='\u004F\u030C' //false
@@ -202,9 +202,9 @@ ES5对字符串对象提供`charAt`方法，返回字符串给定位置的字符
 '\u004F\u030C'.length // 2
 ```
 
-上面代码表示，JavaScript将合成字符视为两个字符，导致两种表示方法不相等。
+上面代码表示，JavaScript 将合成字符视为两个字符，导致两种表示方法不相等。
 
-ES6提供字符串实例的`normalize()`方法，用来将字符的不同表示方法统一为同样的形式，这称为Unicode正规化。
+ES6 提供字符串实例的`normalize()`方法，用来将字符的不同表示方法统一为同样的形式，这称为 Unicode 正规化。
 
 ```javascript
 '\u01D1'.normalize() === '\u004F\u030C'.normalize()
@@ -232,8 +232,8 @@ ES6提供字符串实例的`normalize()`方法，用来将字符的不同表示�
 传统上，JavaScript只有`indexOf`方法，可以用来确定一个字符串是否包含在另一个字符串中。ES6又提供了三种新方法。
 
 - **includes()**：返回布尔值，表示是否找到了参数字符串。
-- **startsWith()**：返回布尔值，表示参数字符串是否在源字符串的头部。
-- **endsWith()**：返回布尔值，表示参数字符串是否在源字符串的尾部。
+- **startsWith()**：返回布尔值，表示参数字符串是否在原字符串的头部。
+- **endsWith()**：返回布尔值，表示参数字符串是否在原字符串的尾部。
 
 ```javascript
 var s = 'Hello world!';
@@ -450,7 +450,7 @@ var y = 2;
 
 var obj = {x: 1, y: 2};
 `${obj.x + obj.y}`
-// 3
+// "3"
 ```
 
 模板字符串之中还能调用函数。
@@ -851,7 +851,8 @@ tag`First line\nSecond line`
 
 function tag(strings) {
   console.log(strings.raw[0]);
-  // "First line\\nSecond line"
+  // strings.raw[0] 为 "First line\\nSecond line"
+  // 打印输出 "First line\nSecond line"
 }
 ```
 
@@ -906,9 +907,9 @@ String.raw({ raw: ['t','e','s','t'] }, 0, 1, 2);
 
 ## 模板字符串的限制
 
-前面提到标签模板里面，可以内嵌其他语言。但是，模板字符串默认会将字符串转义，因此导致了无法嵌入其他语言。
+前面提到标签模板里面，可以内嵌其他语言。但是，模板字符串默认会将字符串转义，导致无法嵌入其他语言。
 
-举例来说，在标签模板里面可以嵌入Latex语言。
+举例来说，标签模板里面可以嵌入 LaTEX 语言。
 
 ```javascript
 function latex(strings) {
@@ -924,9 +925,9 @@ Breve over the h goes \u{h}ere // 报错
 `
 ```
 
-上面代码中，变量`document`内嵌的模板字符串，对于Latex语言来说完全是合法的，但是JavaScript引擎会报错。原因就在于字符串的转义。
+上面代码中，变量`document`内嵌的模板字符串，对于 LaTEX 语言来说完全是合法的，但是 JavaScript 引擎会报错。原因就在于字符串的转义。
 
-模板字符串会将`\u00FF`和`\u{42}`当作Unicode字符进行转义，所以`\unicode`解析时报错；而`\x56`会被当作十六进制字符串转义，所以`\xerxes`会报错。
+模板字符串会将`\u00FF`和`\u{42}`当作 Unicode 字符进行转义，所以`\unicode`解析时报错；而`\x56`会被当作十六进制字符串转义，所以`\xerxes`会报错。也就是说，`\u`和`\x`在 LaTEX 里面有特殊含义，但是 JavaScript 将它们转义了。
 
 为了解决这个问题，现在有一个[提案](https://tc39.github.io/proposal-template-literal-revision/)，放松对标签模板里面的字符串转义的限制。如果遇到不合法的字符串转义，就返回`undefined`，而不是报错，并且从`raw`属性上面可以得到原始字符串。
 
@@ -945,3 +946,4 @@ tag`\unicode and \u{55}`
 ```javascript
 let bad = `bad escape sequence: \unicode`; // 报错
 ```
+
